@@ -1,3 +1,4 @@
+import 'package:event_scheduler_project/models/dogReportModel.dart';
 import 'package:event_scheduler_project/models/eventMode.dart';
 import 'package:event_scheduler_project/pages/event_page.dart';
 import 'package:event_scheduler_project/providers/user_provider.dart';
@@ -12,18 +13,12 @@ String formatDate(DateTime date) {
 }
 
 class EventCard extends StatelessWidget {
-  final Event event;
-  bool? isInFavourites;
-  Function addToFavourites;
+  final DogReport dogReport;
 
   EventCard({
     Key? key,
-    required this.event,
-    required this.addToFavourites,
-    this.isInFavourites,
-  }) : super(key: key) {
-    isInFavourites = isInFavourites ?? false;
-  }
+    required this.dogReport,
+  }) : super(key: key) {}
 
   @override
   Widget build(BuildContext context) {
@@ -33,30 +28,30 @@ class EventCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => EventPage(
-                    eventId: event.eventId,
+                    dogReportId: dogReport.id,
                   )),
         );
       },
       child: Stack(
         children: [
           Container(
+            height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               image: DecorationImage(
                 image: NetworkImage(
-                  event.photoUrl,
+                  dogReport.imgUrl,
                 ), // replace with your image url
                 fit: BoxFit.cover,
               ),
             ),
             child: BottomWidgetPart(
-              event: event,
+              dogReport: dogReport,
             ),
           ),
           TopWidgetPart(
-            event: event,
-            isInFavourites: isInFavourites,
-            addToFavourites: addToFavourites,
+            dogReport: dogReport,
+            isInFavourites: false,
           ),
         ],
       ),
@@ -65,15 +60,14 @@ class EventCard extends StatelessWidget {
 }
 
 class TopWidgetPart extends StatelessWidget {
-  final Event event;
+  final DogReport dogReport;
   final bool? isInFavourites;
-  final Function addToFavourites;
 
-  const TopWidgetPart(
-      {super.key,
-      this.isInFavourites,
-      required this.event,
-      required this.addToFavourites});
+  const TopWidgetPart({
+    super.key,
+    this.isInFavourites,
+    required this.dogReport,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +78,11 @@ class TopWidgetPart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _DatePartContainer(
-            eventDate: event.eventDate,
+            eventDate: dogReport.dateTime,
           ),
           _ButtonPartContainer(
-            addToFavourites: addToFavourites,
             isInFavourites: isInFavourites,
-            event: event,
+            dogReport: dogReport,
           ),
         ],
       ),
@@ -99,14 +92,12 @@ class TopWidgetPart extends StatelessWidget {
 
 class _ButtonPartContainer extends StatelessWidget {
   final bool? isInFavourites;
-  final Event event;
-  final Function addToFavourites;
+  final DogReport dogReport;
 
   const _ButtonPartContainer({
     super.key,
     this.isInFavourites,
-    required this.event,
-    required this.addToFavourites,
+    required this.dogReport,
   });
 
   @override
@@ -117,9 +108,9 @@ class _ButtonPartContainer extends StatelessWidget {
       alignment: Alignment.topRight,
       child: ElevatedButton(
         onPressed: () {
-          isInFavourites!
-              ? removeFromFavourites(event.eventId, event.userId, context)
-              : addToFavourites(event.eventId, event.userId, context);
+          // isInFavourites!
+          //     ? removeFromFavourites(event.eventId, event.userId, context)
+          //     : addToFavourites(event.eventId, event.userId, context);
         },
         child: isInFavourites!
             ? Icon(Icons.remove)
@@ -182,11 +173,11 @@ class _DatePartContainer extends StatelessWidget {
 }
 
 class BottomWidgetPart extends StatelessWidget {
-  final Event event;
+  final DogReport dogReport;
 
   const BottomWidgetPart({
     super.key,
-    required this.event,
+    required this.dogReport,
   });
 
   @override
@@ -207,7 +198,7 @@ class BottomWidgetPart extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              event.description,
+              dogReport.description,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

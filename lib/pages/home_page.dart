@@ -6,10 +6,12 @@ import 'package:event_scheduler_project/components/event_card.dart';
 import 'package:event_scheduler_project/models/eventMode.dart';
 import 'package:event_scheduler_project/models/user.dart';
 import 'package:event_scheduler_project/pages/my_events_page.dart';
+import 'package:event_scheduler_project/resources/api/api_methods.dart';
 import 'package:event_scheduler_project/resources/auth_methods.dart';
 import 'package:event_scheduler_project/resources/firestore_methods.dart';
 import 'package:flutter/material.dart';
 
+import '../models/dogReportModel.dart';
 import '../utils/utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,6 +24,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int eventsToday = 0;
   List<Event> events = [];
+  List<DogReport> dogReports = [];
 
   @override
   void initState() {
@@ -33,70 +36,17 @@ class _HomePageState extends State<HomePage> {
       onNotificationDisplayedMethod:
           NotificationApi.onNotificationDisplayedMethod,
     );
+    getReports();
     super.initState();
 
-    getEvents();
+    // getEvents();
   }
 
-  int countEventsStartingToday(List<Map<String, dynamic>> events) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    return events.where((event) {
-      final eventDate = event['eventDate'];
-      final eventDay = DateTime(eventDate.year, eventDate.month, eventDate.day);
-      return eventDay == today;
-    }).length;
-  }
-
-  Future<void> getEvents() async {
-    List<Event> fetchedEvents = await FireStoreMethods().getEvents();
-    List<String> favouriteEventsIds = await getFavouriteEventsIds();
-
-    // List<Event> fliteredEvents =
-    //     filterEventsByFavorite(fetchedEvents, favouriteEventsIds);
-
+  Future<void> getReports() async {
+    List<DogReport> fetchedDogReports = await ApiMethods().fetchDogReports();
     setState(() {
-      print("stigaa");
-      this.events = filterEventsByFavorite(fetchedEvents, favouriteEventsIds);
+      dogReports = fetchedDogReports;
     });
-  }
-
-  List<Event> filterEventsByFavorite(
-      List<Event> events, List<String> favoriteEventIds) {
-    return events
-        .where((event) => !favoriteEventIds.contains(event.eventId))
-        .toList();
-  }
-
-  Future<List<String>> getFavouriteEventsIds() async {
-    User user = await AuthMethods().getUserDetails();
-
-    return user.myEvents.map((e) => e.toString()).toList();
-  }
-
-  void addToFavourites(String eventId, String userId, context) async {
-    String res = await FireStoreMethods().addToFavourites(eventId, userId);
-    setState(() {
-      events.removeWhere((element) => element.eventId == eventId);
-    });
-
-    if (res == "success") {
-      showSnackBar(context, "Added To Favourites");
-    }
-  }
-
-  Future<void> scheduleNewNotification() async {
-    printScheduledNotifications();
-  }
-
-  Future<void> printScheduledNotifications() async {
-    List<NotificationModel> scheduledNotifications =
-        await AwesomeNotifications().listScheduledNotifications();
-
-    for (var notification in scheduledNotifications) {
-      print(notification.content);
-    }
   }
 
   @override
@@ -112,17 +62,13 @@ class _HomePageState extends State<HomePage> {
               sliver: SliverGrid.count(
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                crossAxisCount: 2,
+                crossAxisCount: 1,
                 children: <Widget>[
-                  ...events.map((event) {
+                  ...dogReports.map((report) {
                     return EventCard(
-                      event: event,
-                      addToFavourites: addToFavourites,
+                      dogReport: report,
                     );
                   }).toList(),
-                  SizedBox(
-                    height: 30,
-                  ),
                   SizedBox(
                     height: 30,
                   ),

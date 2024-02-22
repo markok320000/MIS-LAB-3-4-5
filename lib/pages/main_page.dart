@@ -3,6 +3,7 @@ import 'package:event_scheduler_project/pages/account_page.dart';
 import 'package:event_scheduler_project/pages/add_event_page.dart';
 import 'package:event_scheduler_project/pages/login_page.dart';
 import 'package:event_scheduler_project/pages/map_page.dart';
+import 'package:event_scheduler_project/pages/messages_page.dart';
 import 'package:event_scheduler_project/pages/my_events_page.dart';
 import 'package:event_scheduler_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,8 @@ enum Menus {
   favorite,
   add,
   map,
-  user,
+  // user,
+  messages
 }
 
 final pages = [
@@ -35,7 +37,8 @@ final pages = [
   MyEventsPage(),
   AddEventPage(),
   MapPage(),
-  AccountPage(),
+  // AccountPage(),
+  MessagesPage(),
   // Center(
   //   child: Text('Favorite'),
   // ),
@@ -131,11 +134,11 @@ class MyBottomNavigation extends StatelessWidget {
                   ),
                   Expanded(
                     child: BottomNavigationItem(
-                        onPressed: () => onTap(Menus.user),
-                        index: Menus.user.index,
+                        onPressed: () => onTap(Menus.messages),
+                        index: Menus.messages.index,
                         icon: Icons.account_circle,
                         current: currentIndex,
-                        name: Menus.user),
+                        name: Menus.messages),
                   ),
                 ],
               ),

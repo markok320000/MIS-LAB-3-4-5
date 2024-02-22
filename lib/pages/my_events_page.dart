@@ -86,25 +86,25 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         sliver: SliverGrid.count(
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
-                          crossAxisCount: 2,
-                          children: <Widget>[
-                            ...snapshot.data!
-                                .where(
-                                    (e) => isSameDate(e.eventDate, currentDate))
-                                .map((event) {
-                              return EventCard(
-                                event: event,
-                                addToFavourites: () => {},
-                                isInFavourites: true,
-                              );
-                            }).toList(),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                          ],
+                          crossAxisCount: 1,
+                          // children: <Widget>[
+                          //   ...snapshot.data!
+                          //       .where(
+                          //           (e) => isSameDate(e.eventDate, currentDate))
+                          //       .map((event) {
+                          //     return EventCard(
+                          //       event: event,
+                          //       addToFavourites: () => {},
+                          //       isInFavourites: true,
+                          //     );
+                          //   }).toList(),
+                          //   SizedBox(
+                          //     height: 30,
+                          //   ),
+                          //   SizedBox(
+                          //     height: 30,
+                          //   ),
+                          // ],
                         ),
                       ),
                     ],

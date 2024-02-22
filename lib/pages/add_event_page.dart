@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_scheduler_project/pages/location_pick_page.dart';
 import 'package:event_scheduler_project/providers/user_provider.dart';
+import 'package:event_scheduler_project/resources/api/api_methods.dart';
 import 'package:event_scheduler_project/resources/firestore_methods.dart';
 import 'package:event_scheduler_project/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -157,15 +158,24 @@ class _AddEventPageState extends State<AddEventPage> {
     print('Picked Date: $_pickedTime');
 
     try {
-      String res = await FireStoreMethods().uploadEvent(
-        _descriptionController.text,
-        _pickedImage!,
-        userId,
-        _choosenLocation,
-        _titleController.text,
-        _pickedDate,
-        _pickedTime,
-      );
+      // String res = await FireStoreMethods().uploadEvent(
+      //   _descriptionController.text,
+      //   _pickedImage!,
+      //   userId,
+      //   _choosenLocation,
+      //   _titleController.text,
+      //   _pickedDate,
+      //   _pickedTime,
+      // );
+
+      String res = await ApiMethods().uploadDogReport(
+          _titleController.text,
+          _descriptionController.text,
+          _pickedImage!,
+          userId,
+          _choosenLocation,
+          _pickedDate,
+          _pickedTime);
 
       if (res == "success") {
         setState(() {

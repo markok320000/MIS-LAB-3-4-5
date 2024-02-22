@@ -8,9 +8,9 @@ import 'package:timezone/timezone.dart';
 import '../models/eventMode.dart';
 
 class EventPage extends StatefulWidget {
-  final String eventId;
+  final String dogReportId;
 
-  const EventPage({super.key, required this.eventId});
+  const EventPage({super.key, required this.dogReportId});
 
   @override
   State<EventPage> createState() => _EventPageState();
@@ -42,7 +42,7 @@ class _EventPageState extends State<EventPage> {
   void initState() {
     // TODO: implement initState
     _getCurrentLocation();
-    fetchEvent(widget.eventId);
+    fetchEvent(widget.dogReportId);
     super.initState();
   }
 

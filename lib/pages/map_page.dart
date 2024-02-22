@@ -32,9 +32,11 @@ class _MapPageState extends State<MapPage> {
   List<Event> events = [];
   List<LatLng> polylineCoordinates = [];
 
+  bool lostDogsSwitched = true;
+
   @override
   void initState() {
-    getBytesFromAsset("lib/assets/images/currentLocation.png", 70);
+    getBytesFromAsset("lib/assets/images/foundDog.png", 70);
     getEvents();
     getCurrentLocation();
     super.initState();
@@ -92,7 +94,26 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("MapPage")),
+      appBar: AppBar(
+        title: Text("MapPage"),
+        actions: <Widget>[
+          DropdownButton<String>(
+            value: lostDogsSwitched ? 'Lost' : 'Found',
+            items: <String>['Lost', 'Found']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (value) => {
+              setState(() {
+                lostDogsSwitched = !lostDogsSwitched;
+              })
+            },
+          ),
+        ],
+      ),
       body: Container(
           child: currentLocation.latitude == 0
               ? Align(
@@ -121,13 +142,13 @@ class _MapPageState extends State<MapPage> {
                           Marker(
                             markerId: MarkerId("Source"),
                             position: currentLocation,
-                            icon: BitmapDescriptor.fromBytes(
-                                currentLocationIcon!),
                           ),
                           ...events.map((event) {
                             return Marker(
                                 markerId: MarkerId(event.title),
                                 position: event.geoLocationToLatLng(),
+                                icon: BitmapDescriptor.fromBytes(
+                                    currentLocationIcon!),
                                 onTap: () {
                                   setState(() {
                                     isVisibleTopPopUp = true;
